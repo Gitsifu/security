@@ -17,16 +17,34 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /**
+     * 注册Bean，便于下面使用
+     * @return
+     */
     @Bean
     UserDetailsService customUserService() {
         return new CustomUserService();
     }
 
+    /**
+     * 重写此方法用于用户认证。
+     * 用户授权部分在用户实体类中的 getAuthorities() 方法中，
+     * 注意：用户实体类需要实现 UserDetails 类，授权即在此方法中编写
+     *
+     * @param auth
+     * @throws Exception
+     */
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserService());
     }
 
+    /**
+     * 主要配置一些基本的过滤器
+     *
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
